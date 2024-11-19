@@ -1,10 +1,20 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 const workoutRoutes = require('./routes/workouts')
 const userRoutes = require('./routes/user')
 
 const app = express()
+
+// CORS configuration
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+)
+
 const PORT = process.env.PORT || 3000
 
 app.use(express.json())
