@@ -1,38 +1,34 @@
-require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const workoutRoutes = require('./routes/workouts')
-const userRoutes = require('./routes/user')
+require('dotenv').config();
 
-const app = express()
+const express = require('express');
+const mongoose = require('mongoose');
+const workoutRoutes = require('./routes/workouts');
+const userRoutes = require('./routes/user');
 
-// CORS configuration
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true,
-  })
-)
+// express app
+const app = express();
 
-const PORT = process.env.PORT || 3000
+// middleware
+app.use(express.json());
 
-app.use(express.json())
 app.use((req, res, next) => {
-  console.log(req.path, req.method)
-  next()
-})
+  console.log(req.path, req.method);
+  next();
+});
 
-app.use('/api/workouts', workoutRoutes)
-app.use('/api/user', userRoutes)
+// routes
+app.use('/api/workouts', workoutRoutes);
+app.use('/api/user', userRoutes);
 
+// connect to db
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Connected to DB & listening on port ${PORT}`)
-    })
+    // listen for requests
+    app.listen(process.env.PORT, () => {
+      console.log('connected to db & listening on port', process.env.PORT);
+    });
   })
   .catch((error) => {
-    console.log(error)
-  })
+    console.log(error);
+  });
