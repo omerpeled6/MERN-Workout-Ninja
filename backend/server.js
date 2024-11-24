@@ -1,14 +1,20 @@
-require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const workoutRoutes = require('./routes/workouts')
-const userRoutes = require('./routes/user')
-const path = require('path')
+import dotenv from 'dotenv'
+import express from 'express'
+import mongoose from 'mongoose'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-// express app
+// Import routes
+import workoutRoutes from './routes/workouts.js'
+import userRoutes from './routes/user.js'
+
+// Configure environment variables
+dotenv.config()
+
+// Setup express app
 const app = express()
 
-// middleware
+// Middleware
 app.use(express.json())
 
 app.use((req, res, next) => {
@@ -16,13 +22,15 @@ app.use((req, res, next) => {
   next()
 })
 
-// routes
+// Routes
 app.use('/api/workouts', workoutRoutes)
 app.use('/api/user', userRoutes)
 
-const __dirname = path.resolve() // for deployment
+// Get the __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-// for deployment
+// Serve frontend files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/frontend/build')))
 
@@ -31,15 +39,17 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
-// connect to db
+// Connect to MongoDB and start server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    // listen for requests
-    app.listen(process.env.PORT, () => {
-      console.log('connected to db & listening on port', process.env.PORT)
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(
+        'Connected to DB & listening on port',
+        process.env.PORT || 3000
+      )
     })
   })
   .catch((error) => {
-    console.log(error)
+    console.error('Database connection error:', error)
   })
