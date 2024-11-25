@@ -1,5 +1,3 @@
-to run the project
+MERN APP - WORKout APP
 
-open 2 termminal
-1 -> backend -> npm run dev
-2 -> frontend -> npm start
+URL - https://mern-workout-ninja-1.onrender.com
