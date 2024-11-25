@@ -1,25 +1,24 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-const validator = require('validator')
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+import validator from 'validator'
 
-const Schema = mongoose.Schema
+const { Schema } = mongoose
 
 const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 })
 
-// static signup method
-userSchema.statics.signup = async function(email, password) {
-
-  // validation
+// Static signup method
+userSchema.statics.signup = async function (email, password) {
+  // Validation
   if (!email || !password) {
     throw Error('All fields must be filled')
   }
@@ -44,9 +43,8 @@ userSchema.statics.signup = async function(email, password) {
   return user
 }
 
-// static login method
-userSchema.statics.login = async function(email, password) {
-
+// Static login method
+userSchema.statics.login = async function (email, password) {
   if (!email || !password) {
     throw Error('All fields must be filled')
   }
@@ -64,4 +62,6 @@ userSchema.statics.login = async function(email, password) {
   return user
 }
 
-module.exports = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
+
+export default User
